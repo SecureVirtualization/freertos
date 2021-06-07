@@ -11,6 +11,7 @@ CC = $(CROSS)-gcc
 AS = $(CROSS)-as
 LD = $(CROSS)-ld
 OBJDUMP = $(CROSS)-objdump
+OBJCOPY = $(CROSS)-objcopy
 CFLAGS = -mcpu=cortex-a57 -ffreestanding -Wall -Wextra -g -DGUEST
 #	-mcpu=name
 #		Specify the name of the target processor
@@ -81,6 +82,7 @@ APP_OBJS += nostdlib.o
 OBJS = $(addprefix $(OBJDIR), $(FREERTOS_OBJS) $(FREERTOS_MEMMANG_OBJS) $(FREERTOS_PORT_OBJS) $(APP_OBJS) )
 
 ELF_IMAGE = image.elf
+BIN_IMAGE = image.raw
 
 # Include paths to be passed to $(CC) where necessary
 INC_FREERTOS = $(FREERTOS_SRC)include/
@@ -90,10 +92,13 @@ INC_APP = $(APP_SRC)include/
 INC_FLAGS = $(INCLUDEFLAG)$(INC_FREERTOS) $(INCLUDEFLAG)$(INC_APP) $(INCLUDEFLAG)$(FREERTOS_PORT_SRC)
 
 
-all: $(OBJDIR) $(ELF_IMAGE)
+all: $(OBJDIR) $(ELF_IMAGE) $(BIN_IMAGE)
 
 $(OBJDIR) :
 	mkdir -p $@
+
+$(BIN_IMAGE): $(ELF_IMAGE)
+	$(OBJCOPY) -O binary $^ $@
 
 $(ELF_IMAGE): $(APP_SRC)linker.ld $(OBJS)
 	$(LD) -T $(APP_SRC)linker.ld $^ -o $@

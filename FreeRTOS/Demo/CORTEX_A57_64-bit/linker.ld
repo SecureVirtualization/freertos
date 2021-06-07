@@ -1,5 +1,3 @@
-ENTRY(_boot)
-
 STACKTOP = 0x41000000;
 
 SECTIONS
@@ -10,6 +8,7 @@ SECTIONS
 	__text_start = .;
 	.text :
 	{
+        KEEP(*(.text.entry))
 		KEEP(*(.vectors))
 		KEEP(*(.text.boot))
 		*(.text)

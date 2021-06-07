@@ -11,6 +11,8 @@
 	b.eq	\el1_label
 .endm
 
+.section ".text.entry"
+
 .globl	_boot
 _boot:
 	/*
@@ -35,7 +37,7 @@ _boot:
 0:
 	/* check CPU ID = 0x0, or jump to hang */
 	mrs	x0, mpidr_el1
-	and	x0, x0, #3 
+	and	x0, x0, #3
 	cmp	x0, #0
 	bne	hang
 
