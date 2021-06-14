@@ -81,8 +81,8 @@ APP_OBJS += nostdlib.o
 # All object files specified above are prefixed the intermediate directory
 OBJS = $(addprefix $(OBJDIR), $(FREERTOS_OBJS) $(FREERTOS_MEMMANG_OBJS) $(FREERTOS_PORT_OBJS) $(APP_OBJS) )
 
-ELF_IMAGE = image.elf
-BIN_IMAGE = image.raw
+ELF_IMAGE = kernel.elf
+BIN_IMAGE = kernel.raw
 
 # Include paths to be passed to $(CC) where necessary
 INC_FREERTOS = $(FREERTOS_SRC)include/
