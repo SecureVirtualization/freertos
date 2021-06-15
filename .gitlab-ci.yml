@@ -7,3 +7,9 @@ build:
   artifacts:
     paths:
       - kernel.raw
+  cache:
+    paths:
+      - ./*/*.o
+      - kernel.raw
+      - kernel.elf
+      - kernel.S
