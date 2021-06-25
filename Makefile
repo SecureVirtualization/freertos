@@ -83,6 +83,7 @@ OBJS = $(addprefix $(OBJDIR), $(FREERTOS_OBJS) $(FREERTOS_MEMMANG_OBJS) $(FREERT
 
 ELF_IMAGE = kernel.elf
 BIN_IMAGE = kernel.raw
+ASM_IMAGE = kernel.S
 
 # Include paths to be passed to $(CC) where necessary
 INC_FREERTOS = $(FREERTOS_SRC)include/
@@ -102,7 +103,7 @@ $(BIN_IMAGE): $(ELF_IMAGE)
 
 $(ELF_IMAGE): $(APP_SRC)linker.ld $(OBJS)
 	$(LD) -T $(APP_SRC)linker.ld $^ -o $@
-	$(OBJDUMP) -D $(ELF_IMAGE) > image.list
+	$(OBJDUMP) -D $(ELF_IMAGE) > $(ASM_IMAGE)
 
 # FreeRTOS core
 
