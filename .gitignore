@@ -1,3 +1,4 @@
 obj/
 image.*
 *.swp
+build

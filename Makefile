@@ -2,6 +2,8 @@
 #	make run
 #	Ctrl-A X (Exit)
 
+TOP ?= $(shell pwd)
+O	?= build
 # GCC flags
 CFLAG = -c
 OFLAG = -o
@@ -36,7 +38,7 @@ ASM_FLAGS = -mcpu=cortex-a57 -g
 PORT_COMP_TARG = GCC/ARM_CA57_64_BIT/
 
 # Intermediate directory for all *.o and other files:
-OBJDIR = obj/
+OBJDIR = $(O)/obj/
 
 # FreeRTOS source base directory
 FREERTOS_SRC = ./FreeRTOS/Source/
@@ -81,9 +83,9 @@ APP_OBJS += nostdlib.o
 # All object files specified above are prefixed the intermediate directory
 OBJS = $(addprefix $(OBJDIR), $(FREERTOS_OBJS) $(FREERTOS_MEMMANG_OBJS) $(FREERTOS_PORT_OBJS) $(APP_OBJS) )
 
-ELF_IMAGE = kernel.elf
-BIN_IMAGE = kernel.raw
-ASM_IMAGE = kernel.S
+ELF_IMAGE = $(O)/kernel.elf
+BIN_IMAGE = $(O)/kernel.raw
+ASM_IMAGE = $(O)/kernel.S
 
 # Include paths to be passed to $(CC) where necessary
 INC_FREERTOS = $(FREERTOS_SRC)include/

@@ -3,13 +3,13 @@ image: gcc:9
 build:
   stage: build
   script:
-    - make
+    - make O=build
   artifacts:
     paths:
-      - kernel.raw
+      - build/kernel.raw
   cache:
     paths:
-      - ./*/*.o
-      - kernel.raw
-      - kernel.elf
-      - kernel.S
+      - build/obj/*.o
+      - build/kernel.raw
+      - build/kernel.elf
+      - build/kernel.S
