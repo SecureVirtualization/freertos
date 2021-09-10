@@ -507,6 +507,8 @@ BaseType_t xListWasEmpty;
 	/* Just to avoid compiler warnings. */
 	( void ) pvParameters;
 
+    printf ("enter prvTimerTask\n\r");
+
 	#if( configUSE_DAEMON_TASK_STARTUP_HOOK == 1 )
 	{
 		extern void vApplicationDaemonTaskStartupHook( void );

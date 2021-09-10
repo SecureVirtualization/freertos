@@ -62,6 +62,13 @@ void vApplicationIRQHandler( uint32_t ulICCIAR )
 	value with 0x3FF. */
 	ulInterruptID = ulICCIAR & 0x3FFUL;
 
+    static int block;
+    if (block == 0)
+    {
+        block = 1;
+        printf ("%s: %d first irq=%d\n\r", __FILE__, __LINE__, ulInterruptID);
+    }
+
 	/* call handler function */
 	if( ulInterruptID == TIMER_IRQ) {
 		/* Generic Timer */

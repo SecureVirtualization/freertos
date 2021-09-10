@@ -25,7 +25,7 @@
  * 1 tab == 4 spaces!
  */
 
-	.text
+.section .text
 
 	/* Variables and functions. */
 	.extern ullMaxAPIPriorityMask
@@ -190,7 +190,6 @@
 	/* Restore the ELR. */
 	MSR		ELR_EL3, X2
 #endif
-
 	LDP 	X30, XZR, [SP], #0x10
 	LDP 	X28, X29, [SP], #0x10
 	LDP 	X26, X27, [SP], #0x10
@@ -299,6 +298,7 @@ FreeRTOS_IRQ_Handler:
 
 	/* Increment the interrupt nesting counter. */
 	LDR		X5, ullPortInterruptNestingConst
+
 	LDR		X1, [X5]	/* Old nesting count in X1. */
 	ADD		X6, X1, #1
 	STR		X6, [X5]	/* Address of nesting count variable in X5. */
@@ -309,6 +309,7 @@ FreeRTOS_IRQ_Handler:
 	/* Read value from the interrupt acknowledge register, which is stored in W0
 	for future parameter and interrupt clearing use. */
 	LDR 	X2, ullICCIARConst
+
 	LDR		X3, [X2]
 	LDR		W0, [X3]	/* ICCIAR in W0 as parameter. */
 
@@ -406,26 +407,19 @@ Exit_IRQ_No_Context_Switch:
 	ERET
 
 
-
-
+// The code generated here has misaligned data and
+// LDR cannot properly handle load and causes the exception
+.section .data
 .align 8
 pxCurrentTCBConst: .dword pxCurrentTCB
 ullCriticalNestingConst: .dword ullCriticalNesting
 ullPortTaskHasFPUContextConst: .dword ullPortTaskHasFPUContext
-
 ullICCPMRConst: .dword ullICCPMR
 ullMaxAPIPriorityMaskConst: .dword ullMaxAPIPriorityMask
 vApplicationIRQHandlerConst: .word vApplicationIRQHandler
+.align 8
 ullPortInterruptNestingConst: .dword ullPortInterruptNesting
 ullPortYieldRequiredConst: .dword ullPortYieldRequired
 ullICCIARConst:	.dword ullICCIAR
 ullICCEOIRConst: .dword ullICCEOIR
-
-
-
 .end
-
-
-
-
-

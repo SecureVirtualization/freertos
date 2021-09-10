@@ -12,9 +12,10 @@ CROSS = aarch64-linux-gnu
 CC = $(CROSS)-gcc
 AS = $(CROSS)-as
 LD = $(CROSS)-ld
+STRIP = $(CROSS)-strip
 OBJDUMP = $(CROSS)-objdump
 OBJCOPY = $(CROSS)-objcopy
-CFLAGS = -mcpu=cortex-a57 -ffreestanding -Wall -Wextra -g -DGUEST
+CFLAGS = -march=armv8-a -ffreestanding -Wall -Wextra -g -O0 -DGUEST -nostdlib -fdata-sections -ffunction-sections -fomit-frame-pointer -funit-at-a-time -fno-exceptions -fno-asynchronous-unwind-tables
 #	-mcpu=name
 #		Specify the name of the target processor
 #	-Wall
@@ -32,7 +33,7 @@ CFLAGS = -mcpu=cortex-a57 -ffreestanding -Wall -Wextra -g -DGUEST
 #		standard library may not exist, and program startup may not necessarily
 #		be at "main".  The most obvious example is an OS kernel.  This is
 #		equivalent to -fno-hosted.
-ASM_FLAGS = -mcpu=cortex-a57 -g
+ASM_FLAGS = -march=armv8-a -g
 
 # Compiler/target path in FreeRTOS/Source/portable
 PORT_COMP_TARG = GCC/ARM_CA57_64_BIT/
@@ -84,7 +85,8 @@ APP_OBJS += nostdlib.o
 OBJS = $(addprefix $(OBJDIR), $(FREERTOS_OBJS) $(FREERTOS_MEMMANG_OBJS) $(FREERTOS_PORT_OBJS) $(APP_OBJS) )
 
 ELF_IMAGE = $(O)/kernel.elf
-BIN_IMAGE = $(O)/kernel.raw
+BIN_IMAGE = $(O)/kernel.bin
+RAW_IMAGE = $(O)/kernel.raw
 ASM_IMAGE = $(O)/kernel.S
 
 # Include paths to be passed to $(CC) where necessary
@@ -95,16 +97,22 @@ INC_APP = $(APP_SRC)include/
 INC_FLAGS = $(INCLUDEFLAG)$(INC_FREERTOS) $(INCLUDEFLAG)$(INC_APP) $(INCLUDEFLAG)$(FREERTOS_PORT_SRC)
 
 
-all: $(OBJDIR) $(ELF_IMAGE) $(BIN_IMAGE)
+all: $(OBJDIR) $(ELF_IMAGE) $(BIN_IMAGE) $(RAW_IMAGE)
 
 $(OBJDIR) :
 	mkdir -p $@
 
 $(BIN_IMAGE): $(ELF_IMAGE)
-	$(OBJCOPY) -O binary $^ $@
+	$(STRIP) -s -o $@ $<
+
+OCFLAGS =
+#-j .text -j .text.* -j .data -j .data.* -j .rodata -j .rodata.* -j .vectors -j .got -j .got.* -j .bss -j .bss.* -j .shstrtab -j .comment
+
+$(RAW_IMAGE): $(BIN_IMAGE)
+	$(OBJCOPY) $(OCFLAGS) -O binary $< $@
 
 $(ELF_IMAGE): $(APP_SRC)linker.ld $(OBJS)
-	$(LD) -T $(APP_SRC)linker.ld $^ -o $@
+	$(LD) $(OBJS) -T $(APP_SRC)linker.ld -o $@
 	$(OBJDUMP) -D $(ELF_IMAGE) > $(ASM_IMAGE)
 
 # FreeRTOS core

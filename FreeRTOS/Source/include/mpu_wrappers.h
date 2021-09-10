@@ -169,7 +169,6 @@ only for ports that are using the MPU. */
 	#endif /* MPU_WRAPPERS_INCLUDED_FROM_API_FILE */
 
 #else /* portUSING_MPU_WRAPPERS */
-
 	#define PRIVILEGED_FUNCTION
 	#define PRIVILEGED_DATA
 	#define portUSING_MPU_WRAPPERS 0

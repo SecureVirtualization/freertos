@@ -46,33 +46,62 @@ void hello_world_task(void *p)
 
 	(void)p;
 	while(2) {
-		printf("%s() %d.\n", __func__, i++);
+		printf("%s() %d.\n\r", __func__, i++);
 		vTaskDelay(1000);
 	}
 }
 
+static void bss_init (void)
+{
+    extern uint64_t __bss_start;
+    extern uint64_t __bss_end;
+
+    static uint64_t test;
+
+    uint64_t * ptr = &__bss_start;
+    uint64_t * end = &__bss_end;
+    printf ("bss init %x - %x\n\r", ptr, end);
+    printf ("test=%x\r\n", &test);
+    for (;ptr < end; ptr++)
+    {
+        ptr[0] = 0;
+    }
+
+    extern uint64_t _vector_table;
+    extern uint64_t _freertos_vector_table;
+    printf ("&_vector_table = %x _vector_table=%x\n\r", &_vector_table, _vector_table);
+    printf ("&_freertos_vector_table = %x _freertos_vector_table=%x\n\r", &_freertos_vector_table, _freertos_vector_table);
+}
+
+void trace_asm(uint64_t *line)
+{
+    printf ("trace %x\n\r", line);
+    printf ("trace2 %x\n\r", *line);
+}
+
 int main(void)
 {
-	/* Configure the hardware ready to run */
+    /* Configure the hardware ready to run */
 	prvSetupHardware();
-
-	uart_puts("Hello World main()!\n");
+    bss_init ();
+	uart_puts("Hello World main()!\n\r");
 	//configASSERT(0);
 
 	/* printf() test, have to enable TEST_PRINTF in uart.h */
 	//test_printf();
 
-#if 1	/* Example Test */
+#if 0	/* Example Test */
 	//test_queue();
 	//test_semaphore();
 	//test_binary_semaphore();
 	test_software_timer();
 #else
 	/* Create Tasks */
-	xTaskCreate(hello_world_task, "hello_task", 2048, 0, 1, 0);
+	BaseType_t result = xTaskCreate(hello_world_task, "hello_task", 2048, 0, 1, 0);
+    printf ("Task created %d\n\r", result);
 #endif
 
-	/* Start the scheduler */	
+	/* Start the scheduler */
 	vTaskStartScheduler();
 
 	/* Should not reach here. */

@@ -338,6 +338,7 @@ uint32_t ulAPSR;
 			configSETUP_TICK_INTERRUPT();
 
 			/* Start the first task executing. */
+            printf ("before enter vport restore context\n\r");
 			vPortRestoreTaskContext();
 		}
 	}

@@ -11,7 +11,7 @@
 	b.eq	\el1_label
 .endm
 
-.section ".text.entry"
+.section ".text_entry"
 
 .globl	_boot
 _boot:
@@ -61,6 +61,7 @@ hang:
 	b	hang
 
 
+.section ".text"
 
 
 

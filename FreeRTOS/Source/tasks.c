@@ -1941,6 +1941,8 @@ BaseType_t xReturn;
 	}
 	#endif /* configSUPPORT_STATIC_ALLOCATION */
 
+    printf ("create idle task %d\n\r", xReturn);
+
 	#if ( configUSE_TIMERS == 1 )
 	{
 		if( xReturn == pdPASS )
@@ -1953,6 +1955,8 @@ BaseType_t xReturn;
 		}
 	}
 	#endif /* configUSE_TIMERS */
+
+    printf ("create timer task %d\n\r", xReturn);
 
 	if( xReturn == pdPASS )
 	{
@@ -1994,6 +1998,7 @@ BaseType_t xReturn;
 
 		/* Setting up the timer tick is hardware specific and thus in the
 		portable interface. */
+        printf ("before port sched enter\n\r");
 		if( xPortStartScheduler() != pdFALSE )
 		{
 			/* Should not reach here as if the scheduler is running the
@@ -2003,6 +2008,7 @@ BaseType_t xReturn;
 		{
 			/* Should only reach here if a task calls xTaskEndScheduler(). */
 		}
+        printf ("after port sched enter\n\r");
 	}
 	else
 	{

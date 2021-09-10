@@ -103,7 +103,7 @@
 /* This demo creates RTOS objects using both static and dynamic allocation. */
 #if 1 //RyanYao
 #define configSUPPORT_STATIC_ALLOCATION			0
-#else 
+#else
 #define configSUPPORT_STATIC_ALLOCATION			1
 #endif //RyanYao
 #define configSUPPORT_DYNAMIC_ALLOCATION		1 /* Defaults to 1 anyway. */

@@ -1,17 +1,22 @@
+OUTPUT_FORMAT("elf64-littleaarch64")
+OUTPUT_ARCH(aarch64)
+TARGET(binary)
+
 STACKTOP = 0x41000000;
 
 SECTIONS
 {
 	/* Starts at LOADER_ADDR. */
-	. = 0x40000000;
+	. = 0x40080000;
 	__start = .;
 	__text_start = .;
 	.text :
 	{
-        KEEP(*(.text.entry))
-		KEEP(*(.vectors))
-		KEEP(*(.text.boot))
+        *(.text_entry)
 		*(.text)
+        *(.text.*)
+        . = ALIGN(4096);
+		*(.vectors)
 	}
 	. = ALIGN(4096); /* align to page size */
 	__text_end = .;
@@ -20,15 +25,26 @@ SECTIONS
 	.data :
 	{
 		*(.data)
+        *(.data.*)
 	}
 	. = ALIGN(4096); /* align to page size */
 	__data_end = .;
+
+	__rodata_start = .;
+	.rodata :
+	{
+		*(.rodata)
+		*(.rodata.*)
+	}
+	. = ALIGN(4096); /* align to page size */
+	__rodata_end = .;
 
 	__bss_start = .;
 	.bss :
 	{
 		bss = .;
 		*(.bss)
+		*(.bss.*)
 	}
 	. = ALIGN(4096); /* align to page size */
 	__bss_end = .;
