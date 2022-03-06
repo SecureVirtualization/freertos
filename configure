@@ -1,0 +1,4 @@
+#!/bin/bash -eux
+sudo apt update -q -y
+sudo apt install -q -y bison flex bc cpio g++-aarch64-linux-gnu gcc-aarch64-linux-gnu python3-pip
+pip3 install fdt
